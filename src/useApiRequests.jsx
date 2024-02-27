@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import PromptToLocation from "./PromptToLocation";
 import LocationToCoordinates from "./LocationToCoordinates";
 import WeatherData from "./WeatherData";

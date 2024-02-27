@@ -1,20 +1,49 @@
-import { useState, useEffect } from 'react';
 
-const WeatherData = async (locationData) => {
-  try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}?lat=${locationData.lat}&lon=${locationData.lon}&appid=${process.env.REACT_APP_API_KEY}`
-    );
-    const weatherData = await response.json();
-    return weatherData;
-  } catch (error) {
-    console.error("Error:", error);
-    return Promise.reject("Unable to fetch weather data.");
+import PropTypes from "prop-types";
+import Spinner from "./Spinner";
+
+const WeatherCard = ({
+  isLoading,
+  data,
+  units,
+  country,
+  USstate,
+  setUnits,
+}) => {
+  if (isLoading || !data) {
+    return <Spinner />;
   }
+
+  const displayState = country === "US" ? `, ${USstate}` : "";
+  const handleUnitChange = () => setUnits(units === "metric" ? "imperial" : "metric");
+  const windDirStyle = { transform: `rotate(${data.wind.deg + 90}deg)` };
+
+  return (
+    <div className="weathercard">
+      {isLoading && <Spinner />}
+      <div className="weathercard__data">
+        <div className="weathercard__location">{`${data.name}${displayState}, ${country}`}</div>
+        <div className="weathercard__temperature">
+          <span className="temp-value">{data.main.temp.toFixed(1)}</span>
+          <span className="temp-unit">{units === "metric" ? "°C" : "°F"}</span>
+        </div>
+        <div className="weathercard__wind">
+          <div className="wind-speed">{data.wind.speed.toFixed(1)} {units === "metric" ? "m/s" : "mph"}</div>
+          <div className="wind-direction" style={windDirStyle}></div>
+        </div>
+        <button onClick={handleUnitChange}>Change Units</button>
+      </div>
+    </div>
+  );
 };
 
-WeatherData.propTypes = {
-  locationData: PropTypes.object.isRequired,
+WeatherCard.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  data: PropTypes.object,
+  units: PropTypes.string.isRequired,
+  country: PropTypes.string,
+  USstate: PropTypes.string,
+  setUnits: PropTypes.func.isRequired,
 };
 
-export default WeatherData;
+export default WeatherCard;
