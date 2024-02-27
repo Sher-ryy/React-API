@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
-import './Description.css'; // Asegúrate de que el nombre del archivo CSS coincida
-import Spinner from './Spinner'; // Cambiado de Loader a Spinner
+import PropTypes from "prop-types";
+import Spinner from "./Spinner";
 
 const WeatherDescription = ({ loading, description }) => (
   <div className="description">
@@ -10,10 +9,6 @@ const WeatherDescription = ({ loading, description }) => (
     </div>
   </div>
 );
-
-WeatherDescription.defaultProps = {
-  description: 'Awaiting weather data...',
-};
 
 WeatherDescription.propTypes = {
   loading: PropTypes.bool.isRequired,

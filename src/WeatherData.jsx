@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
+import { useState, useEffect } from 'react';
 
 const WeatherData = async (locationData) => {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${locationData.lat}&lon=${locationData.lon}&appid=${import.meta.env.VITE_OWM}`
+      `${process.env.REACT_APP_API_URL}?lat=${locationData.lat}&lon=${locationData.lon}&appid=${process.env.REACT_APP_API_KEY}`
     );
     const weatherData = await response.json();
     return weatherData;

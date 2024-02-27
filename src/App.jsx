@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import useApiRequests from "./components/useApiRequests";
-import WeatherForm from "./components/WeatherForm";
-import WeatherCard from "./components/WeatherCard";
-import WeatherDescription from "./components/WeatherDescription";
+import useApiRequests from "./useApiRequests"; // Importa useApiRequests desde la raíz de src
+import WeatherForm from "./WeatherForm"; // Importa WeatherForm desde la raíz de src
+import WeatherCard from "./WeatherCard"; // Importa WeatherCard desde la raíz de src
+import WeatherDescription from "./WeatherDescription"; // Importa WeatherDescription desde la raíz de src
+
 
 function App() {
   const [prompt, setPrompt] = useState("");

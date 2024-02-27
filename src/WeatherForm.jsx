@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import "./WeatherForm.css"; // Asegúrate de tener este archivo CSS
+import "./WeatherForm.css";
 
 function WeatherForm({ onSubmit }) {
   const [inputLocation, setInputLocation] = useState("");

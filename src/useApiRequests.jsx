@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
+import PromptToLocation from "./PromptToLocation";
 import LocationToCoordinates from "./LocationToCoordinates";
 import WeatherData from "./WeatherData";
-import WeatherSummary from "./WeatherSummary"; // Asegúrate de cambiar WeatherDescript por WeatherSummary si hiciste esa modificación
-
+import WeatherSummary from "./WeatherSummary";
 const useApiRequests = (prompt) => {
   const [error, setError] = useState(null);
   const [promptData, setPromptData] = useState({});
