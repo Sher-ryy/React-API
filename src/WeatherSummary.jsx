@@ -17,7 +17,7 @@ const WeatherSummary = async (query, weatherInfo) => {
 
   const requestOptions = {
     headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_OPENAI}`,
+      "Authorization": `Bearer ${import.meta.env.VITE_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),

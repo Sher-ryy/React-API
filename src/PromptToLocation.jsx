@@ -1,43 +1,100 @@
 import PropTypes from "prop-types";
 
-const PromptToLocation = async (prompt) => {
-  const API_URL = `https://api.openai.com/v1/chat/completions`;
+const PromptToLocation = (prompt) => {
+  const url = "https://api.openai.com/v1/chat/completions";
+
   const data = {
-    model: "gpt-3.5-turbo",
-    prompt: `Extract location data from the following prompt: "${prompt}"`,
-    temperature: 0.7,
-    max_tokens: 60,
-    top_p: 1.0,
-    frequency_penalty: 0.0,
-    presence_penalty: 0.0,
+    model: "gpt-3.5-turbo-0613",
+    messages: [{ role: "user", content: prompt }],
+    functions: [
+      {
+        name: "displayData",
+        description: "Get the current weather in a given location.",
+        parameters: {
+          type: "object",
+          properties: {
+            country: {
+              type: "string",
+              description: "Country name.",
+            },
+            countryCode: {
+              type: "string",
+              description: "Country code. Use ISO-3166",
+            },
+            USstate: {
+              type: "string",
+              description: "Full state name.",
+            },
+            state: {
+              type: "string",
+              description: "Two-letter state code.",
+            },
+            city: {
+              type: "string",
+              description: "City name.",
+            },
+            unit: {
+              type: "string",
+              description: "location unit: metric or imperial.",
+            },
+          },
+          required: [
+            "countryCode",
+            "country",
+            "USstate",
+            "state",
+            "city",
+            "unit",
+          ],
+        },
+      },
+    ],
+    function_call: "auto",
   };
 
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify(data),
+  const params = {
+    headers: {
+      "Authorization": `Bearer ${import.meta.env.VITE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    method: "POST",
+  };
+
+  return fetch(url, params)
+    .then((response) => response.json())
+    .then((data) => {
+      const promptRes = JSON.parse(
+        data.choices[0].message.function_call.arguments
+      );
+      console.log(promptRes);
+
+      const locationString = () => {
+        if (promptRes.countryCode === "US") {
+          return `${promptRes.city},${promptRes.state},${promptRes.country}`;
+        } else {
+          return `${promptRes.city},${promptRes.country}`;
+        }
+      };
+
+      const promptData = {
+        locationString: locationString(),
+        units: promptRes.unit,
+        country: promptRes.country,
+        USstate: promptRes.USstate
+      }
+
+      return promptData;
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+      return Promise.reject(
+        "Unable to identify a location from your question. Please try again."
+      );
     });
-
-    const responseData = await response.json();
-    // Asumiendo que la respuesta incluye los datos de ubicación en un formato específico
-    locationData = responseData.choices[0].text.trim();
-
-    return {
-      locationString: locationData, // Ejemplo: "New York, NY, USA"
-      units: "metric", // Asumiendo que quieres un valor predeterminado o extraído de la respuesta
-    };
-  } catch (error) {
-    console.error("Error fetching location data:", error);
-    throw new Error("Failed to fetch location data.");
-  }
 };
 
 PromptToLocation.propTypes = {
   prompt: PropTypes.string.isRequired,
 };
-
 export default PromptToLocation;

@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import "./WeatherCard.css";
-import Spinner from "./Spinner"; // Cambiado de Loader a Spinner
+import Spinner from "./Spinner";
 
-// Translate temperature from Kelvin to Celsius or Fahrenheit.
 const tempTranslator = (temp, unit) => {
   const allTemps = {
     k: {
@@ -27,7 +26,6 @@ const tempTranslator = (temp, unit) => {
   }
 };
 
-// Translate wind speed from meters per second to feet per second.
 const speedTranslator = (speed, units) => {
   const allSpeeds = {
     metric: {
@@ -56,7 +54,10 @@ const WeatherCard = ({
   USstate,
   setUnits,
 }) => {
-  // Display state if country is US.
+  if (!data) {
+    return <Spinner />;
+  }
+
   const stateDisplay = () => {
     if (data.sys.country === "US") {
       return `, ${USstate}`;
@@ -65,7 +66,6 @@ const WeatherCard = ({
     }
   };
 
-  // Handle unit change.
   const handleUnitChange = () => {
     if (units === "metric") {
       setUnits("imperial");
@@ -74,14 +74,13 @@ const WeatherCard = ({
     }
   };
 
-  // Set wind direction.
   const windDirStyle = {
     transform: `rotate(${data.wind.deg + 90}deg)`,
   };
 
   return (
     <article className="weathercard">
-      {isLoading && <Spinner />} {/* Cambiado de Loader a Spinner */}
+      {isLoading && <Spinner />}
       <div className="weathercard__data">
         <div className="weathercard__meta">
           <div className="weathercard__meta-location">{`${
@@ -117,7 +116,6 @@ const WeatherCard = ({
   );
 };
 
-// default props
 WeatherCard.defaultProps = {
   data: {
     name: "--",
@@ -136,7 +134,6 @@ WeatherCard.defaultProps = {
   setUnits: () => {},
 };
 
-// props validation
 WeatherCard.propTypes = {
   isLoading: PropTypes.bool,
   data: PropTypes.shape({
